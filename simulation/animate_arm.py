@@ -1,6 +1,15 @@
+import sys
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
+
+# Add project root to Python path
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))
+    )
+)
 
 from control.forward_kinematics import forward_kinematics
 from control.inverse_kinematics import inverse_kinematics
