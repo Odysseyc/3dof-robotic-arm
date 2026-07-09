@@ -53,7 +53,7 @@ Implemented forward kinematics for a planar 3-DOF robotic arm.
 
 ## Motion Planning Demo
 
-The arm computes inverse kinematics and generates smooth joint trajectories.
+The robotic arm computes inverse kinematics and generates smooth joint trajectories between configurations.
 
 ![Trajectory Demo](<docs/images/arm_animation.gif>)
 
