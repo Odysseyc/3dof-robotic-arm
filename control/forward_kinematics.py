@@ -31,10 +31,13 @@ def forward_kinematics(theta1, theta2, theta3):
 
 if __name__ == "__main__":
 
-    position = forward_kinematics(
-        np.deg2rad(30),
-        np.deg2rad(45),
-        np.deg2rad(-20),
-    )
+    from inverse_kinematics import inverse_kinematics
 
-    print(position)
+    target = (0.22, 0.10)
+
+    angles = inverse_kinematics(*target)
+
+    position = forward_kinematics(*angles)
+
+    print(f"Target position:   {target}")
+    print(f"Recovered position: {position}")
