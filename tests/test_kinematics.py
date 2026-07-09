@@ -1,7 +1,17 @@
+import sys
+import os
 import numpy as np
+
+# Add project root to Python path
+sys.path.append(
+    os.path.dirname(
+        os.path.dirname(os.path.abspath(__file__))
+    )
+)
 
 from control.forward_kinematics import forward_kinematics
 from control.inverse_kinematics import inverse_kinematics
+
 
 target = (0.22, 0.10)
 
