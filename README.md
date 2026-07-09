@@ -43,9 +43,16 @@ Summer 2026
 - [ ] Control system developed
 - [ ] Manipulation experiments completed
 
+## Current Progress
+
+Implemented forward kinematics for a planar 3-DOF robotic arm.
+
+### Visualization
+
+![Robot Arm](docs/images/arm.png)
+
 ## Technologies
 
-Planned:
 - Python
 - PyBullet
 - NumPy
