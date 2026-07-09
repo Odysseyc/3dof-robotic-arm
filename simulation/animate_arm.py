@@ -88,4 +88,10 @@ animation = FuncAnimation(
 )
 
 
+animation.save(
+    "docs/images/arm_animation.gif",
+    writer="pillow",
+    fps=20
+)
+
 plt.show()
