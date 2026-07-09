@@ -49,7 +49,7 @@ Implemented forward kinematics for a planar 3-DOF robotic arm.
 
 ### Visualization
 
-![Robot Arm](docs/images/first robot pic.png)
+![Robot Arm](docs/images/First_robot_pic.png)
 
 ## Technologies
 
