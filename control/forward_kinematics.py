@@ -1,48 +1,40 @@
 import numpy as np
 
 
+L1 = 0.15
+L2 = 0.12
+L3 = 0.10
+
+
 def forward_kinematics(theta1, theta2, theta3):
     """
-    Computes end-effector position for a simple 3-DOF planar arm.
+    Computes end-effector position of a planar 3-DOF arm.
 
-    theta1: base rotation
-    theta2: shoulder angle
-    theta3: elbow angle
-
-    Returns:
-        x, y, z position
+    Angles are in radians.
+    Lengths are in meters.
     """
 
-    # Link lengths (meters)
-    L1 = 0.3
-    L2 = 0.25
-    L3 = 0.15
-
-    # Shoulder/elbow contribution
-    r = (
-        L1 * np.cos(theta2)
-        + L2 * np.cos(theta2 + theta3)
-        + L3 * np.cos(theta2 + theta3)
+    x = (
+        L1*np.cos(theta1)
+        + L2*np.cos(theta1+theta2)
+        + L3*np.cos(theta1+theta2+theta3)
     )
 
-    z = (
-        L1 * np.sin(theta2)
-        + L2 * np.sin(theta2 + theta3)
-        + L3 * np.sin(theta2 + theta3)
+    y = (
+        L1*np.sin(theta1)
+        + L2*np.sin(theta1+theta2)
+        + L3*np.sin(theta1+theta2+theta3)
     )
 
-    # Base rotation
-    x = r * np.cos(theta1)
-    y = r * np.sin(theta1)
-
-    return np.array([x, y, z])
+    return np.array([x, y])
 
 
 if __name__ == "__main__":
+
     position = forward_kinematics(
-        theta1=np.pi/4,
-        theta2=np.pi/6,
-        theta3=np.pi/3
+        np.deg2rad(30),
+        np.deg2rad(45),
+        np.deg2rad(-20),
     )
 
-    print("End effector position:", position)
+    print(position)
