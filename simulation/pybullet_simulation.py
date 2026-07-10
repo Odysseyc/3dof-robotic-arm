@@ -5,7 +5,7 @@ import numpy as np
 import pybullet as p
 import pybullet_data
 
-# Ensure project root is in the path to read your custom IK module
+# Ensure project root is in the path to read custom IK module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control.inverse_kinematics import inverse_kinematics
 from control.config_loader import load_robot_config
@@ -41,7 +41,6 @@ def run_pybullet_simulation():
     slider_y = p.addUserDebugParameter("Target Y", -max_reach, max_reach, 0.15)
     slider_phi = p.addUserDebugParameter("Target Phi (Rad)", -np.pi, np.pi, 0.0)
 
-    # --- NEW: Variable to hold the previous frame's tip position ---
     # In our URDF, link3 is index 2.
     end_effector_link_idx = 2
     last_tip_position = None
@@ -71,24 +70,35 @@ def run_pybullet_simulation():
             except ValueError:
                 pass
 
-            # --- NEW: Trace the End-Effector Path ---
-            # 1. Get the current spatial coordinates of the tip link
+            # 1. Get the position of the link origin (which is the wrist joint)
             link_state = p.getLinkState(robot_id, end_effector_link_idx)
-            current_tip_position = link_state[0]  # Extracts (X, Y, Z) tuple
+            wrist_pos = link_state[0]  # This is (x_wrist, y_wrist, z_wrist)
 
-            # 2. If we have a past frame coordinate, draw a segment between them
+            # 2. Get the joint positions to calculate the absolute cumulative angle
+            joint_states = p.getJointStates(robot_id, active_joints)
+            t1 = joint_states[0][0]
+            t2 = joint_states[1][0]
+            t3 = joint_states[2][0]
+            global_phi = t1 + t2 + t3  # Total angle relative to global horizon
+
+            # 3. Project forward by link length L3 to find the actual tip coordinate
+            tip_x = wrist_pos[0] + L3 * np.cos(global_phi)
+            tip_y = wrist_pos[1] + L3 * np.sin(global_phi)
+            tip_z = wrist_pos[2]  # Keep Z the same since it's a planar arm
+            current_tip_position = [tip_x, tip_y, tip_z]
+
+            # 4. If we have a past frame coordinate, draw the line segment
             if last_tip_position is not None:
                 p.addUserDebugLine(
                     lineFromXYZ=last_tip_position,
                     lineToXYZ=current_tip_position,
                     lineColorRGB=[1, 0, 0],  # Bright Red Line
-                    lineWidth=2.5,
-                    lifeTime=10.0            # Line fades out automatically after 10 seconds
+                    lineWidth=3.0,
+                    lifeTime=10.0            # Fades after 10 seconds
                 )
             
-            # 3. Update the tracking coordinate for the next loop cycle
+            # 5. Update tracking coordinate for the next loop cycle
             last_tip_position = current_tip_position
-
             p.stepSimulation()
             time.sleep(1.0 / 240.0)
             
