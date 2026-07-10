@@ -34,3 +34,19 @@ if __name__ == "__main__":
     path = interpolate_joints(start, end)
 
     print(path.shape)
+
+def interpolate_cartesian(start, end, steps=100):
+    """
+    Linearly interpolate between Cartesian points.
+    """
+
+    start = np.array(start)
+    end = np.array(end)
+
+    trajectory = []
+
+    for alpha in np.linspace(0,1,steps):
+        point = (1-alpha)*start + alpha*end
+        trajectory.append(point)
+
+    return np.array(trajectory)
