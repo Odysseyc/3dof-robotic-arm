@@ -15,8 +15,8 @@ from control.forward_kinematics import forward_kinematics
 
 
 path = interpolate_cartesian(
-    [0.15,0.10],
-    [0.30,0.20],
+    [0.15, 0.10],
+    [0.22, 0.15].
     steps=20
 )
 
