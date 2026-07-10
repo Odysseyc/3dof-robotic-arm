@@ -16,7 +16,7 @@ from control.forward_kinematics import forward_kinematics
 results = open("tracking_results.txt", "w")
 path = interpolate_cartesian(
     [0.15, 0.10],
-    [0.22, 0.15].
+    [0.22, 0.15],
     steps=20
 )
 
