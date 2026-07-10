@@ -43,6 +43,10 @@ Summer 2026
 - [ ] Control system developed
 - [ ] Manipulation experiments completed
 
+## Cartesian Motion Demo
+
+![Cartesian Motion](simulation/cartesian_motion.gif)
+
 ## Current Progress
 
 Implemented forward kinematics for a planar 3-DOF robotic arm.
