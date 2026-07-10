@@ -71,8 +71,17 @@ def run_pybullet_simulation():
         time.sleep(1.0 / 240.0) # Maintain steady physics ticking updates at 240Hz
         
     print("Target coordinate reached and stabilized.")
-    time.sleep(2.0)
-    p.disconnect()
+    
+    # Keep the window open indefinitely until you manually close it or hit Ctrl+C
+    print("Simulation complete. Keeping GUI window open...")
+    try:
+        while p.isConnected():
+            p.stepSimulation()
+            time.sleep(1.0 / 240.0)
+    except KeyboardInterrupt:
+        print("\nSimulation stopped by user.")
+    finally:
+        p.disconnect()
 
 if __name__ == "__main__":
     run_pybullet_simulation()
