@@ -21,14 +21,11 @@ def run_pybullet_simulation():
     # 2. Build Environment
     p.loadURDF("plane.urdf")
     
-    # Note: In a full pipeline, you would parse a custom .urdf matching your L1, L2, L3 lengths.
-    # For this quick demonstration runner, we use a standard KUKA/Panda variant or an ambient arm link array.
     # Here we load a default industrial serial arm assembly model
-    robot_id = p.loadURDF("kuka_iiwa/model.urdf", [0, 0, 0], useFixedBase=True)
-    num_joints = p.getNumJoints(robot_id)
+    urdf_path = os.path.join(os.path.dirname(os.path.dirname(os.abspath(__file__))), "urdf", "arm_3dof.urdf")
+    robot_id = p.loadURDF(urdf_path, [0, 0, 0], useFixedBase=True)
     
-    # We will control the first 3 primary revolute pitch joints to act as our 3-DOF planar skeleton
-    active_joints = [1, 2, 3] 
+    active_joints = [0, 1, 2]
     
     # 3. Define the Target Path (Cartesian Space Coordinates)
     # Let's map a tracking path for the tip to execute
