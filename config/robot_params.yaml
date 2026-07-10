@@ -1,7 +1,8 @@
-link_lengths:
-  L1: 0.15
-  L2: 0.12
-  L3: 0.10
+robot:
+  link_lengths:
+    L1: 0.15
+    L2: 0.12
+    L3: 0.10
 
 control:
   kp: 2.0
