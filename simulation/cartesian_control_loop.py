@@ -40,7 +40,7 @@ for point in path:
     )
     
     results.write(
-    f"Target: {target} Actual: {position}\n"
+    f"Target: {point} Actual: {position}\n"
     )
 
 results.close()
