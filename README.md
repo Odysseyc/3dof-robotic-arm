@@ -57,6 +57,20 @@ The robotic arm computes inverse kinematics and generates smooth joint trajector
 
 ![Trajectory Demo](<docs/images/arm_animation.gif>)
 
+## Control
+
+The arm simulation includes PID joint control.
+
+The controller models:
+- proportional error correction
+- integral accumulation
+- derivative damping
+
+Future work:
+- rigid body dynamics
+- torque limits
+- physical hardware deployment
+
 ## Technologies
 
 - Python
