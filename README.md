@@ -85,6 +85,23 @@ Future extensions:
 - rigid-body dynamics
 - hardware deployment
 
+## Motion Planning
+
+The arm supports:
+
+- joint-space trajectory interpolation
+- Cartesian end-effector trajectories
+- inverse kinematics conversion
+- closed-loop tracking
+
+Pipeline:
+
+Cartesian target
+→ IK
+→ joint trajectory
+→ controller
+→ robot dynamics
+
 ## Technologies
 
 - Python
