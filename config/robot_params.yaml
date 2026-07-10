@@ -1,0 +1,12 @@
+link_lengths:
+  L1: 0.15
+  L2: 0.12
+  L3: 0.10
+
+control:
+  kp: 2.0
+  ki: 0.1
+  kd: 0.05
+
+simulation:
+  timestep: 0.01
