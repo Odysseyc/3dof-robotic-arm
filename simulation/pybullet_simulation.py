@@ -22,7 +22,9 @@ def run_pybullet_simulation():
     p.loadURDF("plane.urdf")
     
     # Here we load a default industrial serial arm assembly model
-    urdf_path = os.path.join(os.path.dirname(os.path.dirname(os.abspath(__file__))), "urdf", "arm_3dof.urdf")
+    project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    urdf_path = os.path.join(project_root, "urdf", "arm_3dof.urdf")
+    
     robot_id = p.loadURDF(urdf_path, [0, 0, 0], useFixedBase=True)
     
     active_joints = [0, 1, 2]
