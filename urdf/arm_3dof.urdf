@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<robot name="planar_3dof_arm">
+
+  <!-- Materials for visual styling -->
+  <material name="dark_gray"><color rgba="0.2 0.2 0.2 1.0"/></material>
+  <material name="blue"><color rgba="0.1 0.4 0.8 1.0"/></material>
+  <material name="green"><color rgba="0.2 0.7 0.2 1.0"/></material>
+  <material name="orange"><color rgba="0.9 0.5 0.1 1.0"/></material>
+
+  <!-- ==================== Base Link ==================== -->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+      <material name="dark_gray"/>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0.025" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.05" length="0.05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="1.0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- ==================== Joint 1 (Shoulder) ==================== -->
+  <!-- Revolute joint spinning around the Z-axis -->
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="link1"/>
+    <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="3.0" lower="-3.14" upper="3.14"/>
+  </joint>
+
+  <!-- ==================== Link 1 (Length: 0.15m) ==================== -->
+  <link name="link1">
+    <visual>
+      <!-- Offset visual cylinder so its base sits at the joint origin -->
+      <origin xyz="0.075 0 0.02" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.02" length="0.15"/>
+      </geometry>
+      <material name="blue"/>
+    </visual>
+    <collision>
+      <origin xyz="0.075 0 0.02" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.02" length="0.15"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.5"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+  </link>
+
+  <!-- ==================== Joint 2 (Elbow) ==================== -->
+  <!-- Placed exactly L1 (0.15m) down the X-axis of Link 1 -->
+  <joint name="joint2" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="0.15 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="3.0" lower="-3.14" upper="3.14"/>
+  </joint>
+
+  <!-- ==================== Link 2 (Length: 0.12m) ==================== -->
+  <link name="link2">
+    <visual>
+      <origin xyz="0.06 0 0.04" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.015" length="0.12"/>
+      </geometry>
+      <material name="green"/>
+    </visual>
+    <collision>
+      <origin xyz="0.06 0 0.04" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.015" length="0.12"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.4"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0005" iyz="0" izz="0.0005"/>
+    </inertial>
+  </link>
+
+  <!-- ==================== Joint 3 (Wrist) ==================== -->
+  <!-- Placed exactly L2 (0.12m) down the X-axis of Link 2 -->
+  <joint name="joint3" type="revolute">
+    <parent link="link2"/>
+    <child link="link3"/>
+    <origin xyz="0.12 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="100" velocity="3.0" lower="-3.14" upper="3.14"/>
+  </joint>
+
+  <!-- ==================== Link 3 (Length: 0.10m) ==================== -->
+  <link name="link3">
+    <visual>
+      <origin xyz="0.05 0 0.06" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.10"/>
+      </geometry>
+      <material name="orange"/>
+    </visual>
+    <collision>
+      <origin xyz="0.05 0 0.06" rpy="0 1.5708 0"/>
+      <geometry>
+        <cylinder radius="0.01" length="0.10"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <mass value="0.2"/>
+      <inertia ixx="0.00005" ixy="0" ixz="0" iyy="0.0002" iyz="0" izz="0.0002"/>
+    </inertial>
+  </link>
+
+</robot>
