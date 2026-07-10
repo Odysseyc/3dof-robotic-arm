@@ -1,120 +1,122 @@
 # 3-DOF Robotic Arm
 
-Independent robotics project exploring the design, control, and learning-based manipulation of a 3-DOF robotic arm platform.
+An independent robotics project focused on building the software stack for a planar 3-DOF robotic manipulator. The project explores robot kinematics, trajectory planning, closed-loop control, and simulation as a foundation for future hardware deployment and learning-based manipulation.
 
-## Overview
+---
 
-The goal of this project is to build and control a low-cost robotic arm while developing a deeper understanding of:
+## Features
 
-- Forward and inverse kinematics
-- Robot modeling
-- Embedded motor control
-- Motion planning
-- Simulation-to-real transfer
-- Learning-based manipulation
+* ✅ Forward kinematics
+* ✅ Inverse kinematics
+* ✅ Joint-space trajectory planning
+* ✅ Cartesian trajectory planning
+* ✅ PID joint controller
+* ✅ Closed-loop Cartesian tracking
+* ✅ Motion visualization and animation
 
-## Project Goals
+---
 
-### Phase 1: Simulation
-- Build a simulated 3-DOF robotic arm model
-- Implement forward kinematics
-- Implement inverse kinematics
-- Develop trajectory planning methods
+## Project Structure
 
-### Phase 2: Hardware Platform
-- Design mechanical structure
-- Select actuators and electronics
-- Assemble physical prototype
-- Implement low-level control
+```text
+3dof-robotic-arm/
+├── config/              # Robot configuration files
+├── control/             # Kinematics, controllers, trajectories
+├── docs/                # Documentation and images
+├── simulation/          # Simulation and visualization scripts
+├── tests/               # Test scripts
+└── README.md
+```
 
-### Phase 3: Manipulation Learning
-- Integrate vision-based control
-- Explore imitation learning and reinforcement learning approaches
-- Evaluate manipulation tasks
+---
 
-## Timeline
+## Motion Planning Pipeline
 
-Summer 2026
+The current control pipeline is:
 
-- [ ] Robot design finalized
-- [ ] Simulation environment created
-- [ ] Kinematics implemented
-- [ ] Hardware assembled
-- [ ] Control system developed
-- [ ] Manipulation experiments completed
+```text
+Cartesian Target
+        │
+        ▼
+Inverse Kinematics
+        │
+        ▼
+Joint Trajectory
+        │
+        ▼
+PID Controller
+        │
+        ▼
+Robot Simulation
+        │
+        ▼
+End-Effector Motion
+```
 
-## Cartesian Motion Demo
+---
+
+## Current Results
+
+### Robot Visualization
+
+![Robot Arm](docs/images/First%20robot%20pic.png)
+
+### Joint Motion Animation
+
+![Joint Motion](docs/images/arm_animation.gif)
+
+### Cartesian Motion Demo
 
 ![Cartesian Motion](simulation/cartesian_motion.gif)
 
-## Current Progress
+The simulator successfully generates smooth Cartesian trajectories, converts them to joint commands using inverse kinematics, and tracks the desired end-effector motion through closed-loop control.
 
-Implemented forward kinematics for a planar 3-DOF robotic arm.
+---
 
-### Visualization
+## Implemented Components
 
-![Robot Arm](<docs/images/First robot pic.png>)
+### Kinematics
 
-## Motion Planning Demo
+* Forward kinematics for a planar 3-link manipulator
+* Analytical inverse kinematics solver
+* End-effector position verification
 
-The robotic arm computes inverse kinematics and generates smooth joint trajectories between configurations.
+### Motion Planning
 
-![Trajectory Demo](<docs/images/arm_animation.gif>)
+* Joint-space interpolation
+* Cartesian trajectory interpolation
+* Continuous end-effector path generation
 
-## Control
+### Control
 
-The arm simulation includes PID joint control.
+* PID joint controller
+* Closed-loop tracking simulation
+* Cartesian tracking validation
 
-The controller models:
-- proportional error correction
-- integral accumulation
-- derivative damping
-
-Future work:
-- rigid body dynamics
-- torque limits
-- physical hardware deployment
-
-## Dynamics Simulation
-
-The arm simulation now models:
-
-- joint inertia
-- damping
-- torque inputs
-- closed-loop PID control
-
-Future extensions:
-- gravity compensation
-- rigid-body dynamics
-- hardware deployment
-
-## Motion Planning
-
-The arm supports:
-
-- joint-space trajectory interpolation
-- Cartesian end-effector trajectories
-- inverse kinematics conversion
-- closed-loop tracking
-
-Pipeline:
-
-Cartesian target
-→ IK
-→ joint trajectory
-→ controller
-→ robot dynamics
+---
 
 ## Technologies
 
-- Python
-- PyBullet
-- NumPy
-- ROS 2
-- Embedded controllers
-- Computer vision tools
+* Python
+* NumPy
+* Matplotlib
+* Pillow (GIF generation)
+* Git & GitHub
+
+---
+
+## Future Work
+
+* Build the physical 3-DOF robotic arm
+* Integrate embedded motor control
+* Add a URDF robot model
+* Simulate the robot in PyBullet or MuJoCo
+* Implement dynamics-based control
+* Add vision-guided manipulation
+* Explore imitation learning and reinforcement learning for autonomous manipulation
+
+---
 
 ## Author
 
-Adam Sabet
+**Adam Sabet**
