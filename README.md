@@ -71,6 +71,20 @@ Future work:
 - torque limits
 - physical hardware deployment
 
+## Dynamics Simulation
+
+The arm simulation now models:
+
+- joint inertia
+- damping
+- torque inputs
+- closed-loop PID control
+
+Future extensions:
+- gravity compensation
+- rigid-body dynamics
+- hardware deployment
+
 ## Technologies
 
 - Python
