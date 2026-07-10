@@ -5,7 +5,7 @@ import numpy as np
 import pybullet as p
 import pybullet_data
 
-# Ensure project root is in the path to read custom IK module
+# Ensure project root is in the path to read your custom IK module
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control.inverse_kinematics import inverse_kinematics
 from control.config_loader import load_robot_config
@@ -36,33 +36,54 @@ def run_pybullet_simulation():
     L3 = config['robot']['link_lengths']['L3']
     max_reach = L1 + L2 + L3
 
-    # 3. Initialize PyBullet Interactive GUI Sliders
-    # Parameters: p.addUserDebugParameter("Label", minimum, maximum, initial_value)
-    slider_x = p.addUserDebugParameter("Target X", -max_reach, max_reach, 0.20)
-    slider_y = p.addUserDebugParameter("Target Y", -max_reach, max_reach, 0.15)
+    # 3. Initialize PyBullet Interactive GUI Sliders & Mode Controls
+    # Mode toggle: 0 = Manual Sliders, 1 = Auto Circle Track
+    slider_mode = p.addUserDebugParameter("AUTO MODE (0=Off, 1=On)", 0, 1, 0)
+    
+    slider_x = p.addUserDebugParameter("Target X (Manual)", -max_reach, max_reach, 0.20)
+    slider_y = p.addUserDebugParameter("Target Y (Manual)", -max_reach, max_reach, 0.15)
     slider_phi = p.addUserDebugParameter("Target Phi (Rad)", -np.pi, np.pi, 0.0)
 
     # Variables to track structural paths frame-over-frame
     end_effector_link_idx = 2
     last_tip_position = None
+    
+    # Parametric variables to define the tracking circle
+    circle_center_x = 0.18
+    circle_center_y = 0.12
+    circle_radius = 0.06
+    sim_time = 0.0  # Tracks overall accumulated runtime
 
     print("\n=======================================================")
-    print("Interactive Mode Active! Move sliders in the PyBullet window.")
-    print("Red lines = Target is inside workspace and active.")
-    print("Yellow lines = Out of bounds! Reaching maximum stretch limits.")
-    print("Press Ctrl+C in the terminal to terminate.")
+    print("Simulation Pipeline Running!")
+    print("Toggle 'AUTO MODE' slider to 1 to watch the arm trace a circle.")
     print("=======================================================\n")
 
     # 4. Infinite Real-Time Control Loop
     try:
         while p.isConnected():
-            # Read targets dynamically directly from your UI window panels
-            target_x = p.readUserDebugParameter(slider_x)
-            target_y = p.readUserDebugParameter(slider_y)
+            # Check the current operational mode
+            auto_mode_active = p.readUserDebugParameter(slider_mode) >= 0.5
             target_phi = p.readUserDebugParameter(slider_phi)
             
+            if auto_mode_active:
+                # --- AUTO-CIRCLE GENERATOR ---
+                # Increment time smoothly based on physics loop frequency
+                sim_time += 1.0 / 240.0
+                speed_factor = 2.0  # Adjusts how fast the arm moves around the circle
+                
+                # Parametric equations of a circle: x = cx + r*cos(w*t), y = cy + r*sin(w*t)
+                target_x = circle_center_x + circle_radius * np.cos(speed_factor * sim_time)
+                target_y = circle_center_y + circle_radius * np.sin(speed_factor * sim_time)
+            else:
+                # --- MANUAL SLIDER MODE ---
+                target_x = p.readUserDebugParameter(slider_x)
+                target_y = p.readUserDebugParameter(slider_y)
+                # Reset simulation time when switching back to manual mode
+                sim_time = 0.0
+            
             try:
-                # Resolve joint angles using your analytical un-cheated IK solver
+                # Resolve joint angles using your analytical IK solver
                 theta1, theta2, theta3 = inverse_kinematics(target_x, target_y, phi=target_phi)
                 target_angles = [theta1, theta2, theta3]
                 
@@ -73,19 +94,18 @@ def run_pybullet_simulation():
                         jointIndex=joint_idx,
                         controlMode=p.POSITION_CONTROL,
                         targetPosition=target_angles[i],
-                        force=150.0 # Torque ceiling against gravitational drift
+                        force=150.0
                     )
-                # Keep tracking line RED when position is completely reachable
+                # Draw trailing paths in RED when tracking successfully
                 line_color = [1, 0, 0]
                 
             except ValueError:
-                # Flash path YELLOW when the user selects a position beyond bounds
+                # Flash path YELLOW when circle or cursor extends past bounds
                 line_color = [1, 1, 0]
 
             # 5. Project and Trace the True End-Effector Tip Position
-            # Get the raw joint origin location (which sits at the wrist joint interface)
             link_state = p.getLinkState(robot_id, end_effector_link_idx)
-            wrist_pos = link_state[0]  # Tuple: (x_wrist, y_wrist, z_wrist)
+            wrist_pos = link_state[0]
 
             # Read raw joint states to sum the orientation relative to the horizon
             joint_states = p.getJointStates(robot_id, active_joints)
@@ -107,14 +127,14 @@ def run_pybullet_simulation():
                     lineToXYZ=current_tip_position,
                     lineColorRGB=line_color,
                     lineWidth=3.0,
-                    lifeTime=10.0 # Line segments fade out over 10 seconds
+                    lifeTime=12.0 # Slightly longer lifetime to view full circular lap
                 )
             
             # Update tracking coordinate reference frames
             last_tip_position = current_tip_position
 
             p.stepSimulation()
-            time.sleep(1.0 / 240.0) # Steady physics step updates at 240Hz
+            time.sleep(1.0 / 240.0)
             
     except KeyboardInterrupt:
         print("\nSimulation stopped by user.")
