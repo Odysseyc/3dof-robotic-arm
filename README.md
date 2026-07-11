@@ -208,6 +208,3 @@ LIBGL_ALWAYS_SOFTWARE=1
 # Author
 
 **Adam Sabet**
-
-The simulator successfully generates smooth Cartesian trajectories, converts them to joint commands using inverse kinematics, and tracks the desired end-effector motion through closed-loop control.
-
