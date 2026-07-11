@@ -107,12 +107,12 @@ The software pipeline converts continuous Cartesian trajectories into joint-spac
   - Colored links
   - Link dimensions:
 
-| Link | Length |
-|------|--------|
-| L₁ | 5 cm |
-| L₂ | 15 cm |
-| L₃ | 12 cm |
-| L₄ | 10 cm |
+| Link | Length | Postition |
+|------|--------|-----------|
+| L₁ | 5 cm | Base
+| L₂ | 15 cm | Shoulder
+| L₃ | 12 cm | Elbow
+| L₄ | 10 cm | End
 
 ---
 
