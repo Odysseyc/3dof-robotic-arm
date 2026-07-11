@@ -1,63 +1,86 @@
-# 3-DOF Robotic Arm
+# Spatial 3-DOF Robotic Arm
 
-An independent robotics project focused on building the software stack for a planar 3-DOF robotic manipulator. The project explores robot kinematics, trajectory planning, closed-loop control, and simulation as a foundation for future hardware deployment and learning-based manipulation.
+An independent robotics project focused on building a fully integrated software and hardware stack for a 3-DOF robotic manipulator. This repository bridges analytical robot kinematics and real-time trajectory planning with industry-standard middleware (ROS 2), 3D visual telemetry (RViz), rigid-body physics engines (PyBullet), and embedded microcontroller hardware deployment.
 
 ---
 
 ## Features
 
-* ✅ Forward kinematics
-* ✅ Inverse kinematics
-* ✅ Joint-space trajectory planning
-* ✅ Cartesian trajectory planning
-* ✅ PID joint controller
-* ✅ Closed-loop Cartesian tracking
-* ✅ Motion visualization and animation
+- ✅ **Forward Kinematics:** Computes precise spatial link positions.
+- ✅ **Analytical Inverse Kinematics Solver:** Solves exact geometric joint angles from 3D Cartesian target positions.
+- ✅ **PyBullet Physics Simulation:** Validates torques, contact forces, and gravity compensation in a rigid-body physics environment.
+- ✅ **ROS 2 Humble Integration:** Native ROS 2 nodes streaming joint and coordinate data across DDS.
+- ✅ **URDF Robot Modeling:** Physical robot description including mass, inertia, collision, and visual geometry.
+- ✅ **3D Visualization with RViz:** Live 30 Hz visualization of robot motion and coordinate transforms.
+- ✅ **Interactive Motion Planning:** Continuous trajectory generation including vertical circular paths.
+- ✅ **Closed-Loop Simulation:** Matplotlib visualization, PyBullet validation, and PID controller testing.
+- ✅ **Embedded Hardware Deployment:** Arduino UNO R4 WiFi integration with MG996R high-torque servos.
 
 ---
 
-## Project Structure
+# Project Structure
 
 ```text
 3dof-robotic-arm/
-├── config/              # Robot configuration files
-├── control/             # Kinematics, controllers, trajectories
-├── docs/                # Documentation and images
-├── simulation/          # Simulation and visualization scripts
-├── tests/               # Test scripts
+├── arm_control/
+│   ├── arm_control/
+│   │   ├── joint_publisher.py      # Waving test generator
+│   │   ├── ik_tracker.py           # 3D inverse kinematics node
+│   │   └── circle_planner.py       # Continuous trajectory planner
+│   │
+│   ├── launch/
+│   │   └── visualize_arm.launch.py
+│   │
+│   ├── urdf/
+│   │   └── arm_3dof.urdf
+│   │
+│   ├── package.xml
+│   └── setup.py
+│
+├── control/                        # Kinematics, controllers, planners
+├── simulation/                     # PyBullet & visualization scripts
+├── tests/
+├── docs/
 └── README.md
 ```
 
 ---
 
-## Motion Planning Pipeline
-
-The current control pipeline is:
+# Motion Planning Pipeline
 
 ```text
-Cartesian Target
-        │
-        ▼
-Inverse Kinematics
-        │
-        ▼
-Joint Trajectory
-        │
-        ▼
-PID Controller
-        │
-        ▼
-Robot Simulation
-        │
-        ▼
-End-Effector Motion
+        [ 3D Cartesian Goal Path ]
+        (Continuous Circle Planner)
+                    │
+                    ▼
+         [ geometry_msgs/msg/Point ]
+                    │
+                    ▼
+       [ 3D Geometric Inverse Kinematics ]
+               (ik_tracker Node)
+                    │
+                    ▼
+         [ sensor_msgs/msg/JointState ]
+                    │
+     ┌──────────────┼──────────────┐
+     ▼              ▼              ▼
+[ ROS 2 Utilities ] [ PyBullet Sim ] [ Embedded Controller ]
+(state_publisher)   (Physics Engine)  (Arduino R4 Serial)
+     │              │              │
+     ▼              ▼              ▼
+ [ 3D Telemetry ]   [ Torque/Load ]   [ Physical Actuation ]
+  (RViz Visuals)    (Force Feedback)   (MG996R Servo PWM)
 ```
 
 ---
 
-## Current Results
+# Current Results
 
-### Robot Visualization
+## 3D ROS 2 Telemetry & Joint Tracking
+
+The software pipeline converts continuous Cartesian trajectories into joint-space commands through analytical inverse kinematics, broadcasting real-time transforms for visualization inside RViz while simultaneously validating the same commands in PyBullet.
+
+### Robot Visualization (Legacy Simulation)
 
 ![Robot Arm](docs/images/First%20robot%20pic.png)
 
@@ -69,54 +92,122 @@ End-Effector Motion
 
 ![Cartesian Motion](simulation/cartesian_motion.gif)
 
-The simulator successfully generates smooth Cartesian trajectories, converts them to joint commands using inverse kinematics, and tracks the desired end-effector motion through closed-loop control.
+---
+
+# Implemented Components
+
+## Kinematics & Modeling
+
+- Forward kinematics for a spatial 3-link manipulator.
+- Analytical inverse kinematics using explicit geometric equations.
+- Complete URDF robot model with:
+  - Visual geometry
+  - Collision geometry
+  - Inertial properties
+  - Colored links
+  - Link dimensions:
+
+| Link | Length |
+|------|--------|
+| L₁ | 5 cm |
+| L₂ | 15 cm |
+| L₃ | 12 cm |
+| L₄ | 10 cm |
 
 ---
 
-## Implemented Components
+## Physics Simulation (PyBullet)
 
-### Kinematics
-
-* Forward kinematics for a planar 3-link manipulator
-* Analytical inverse kinematics solver
-* End-effector position verification
-
-### Motion Planning
-
-* Joint-space interpolation
-* Cartesian trajectory interpolation
-* Continuous end-effector path generation
-
-### Control
-
-* PID joint controller
-* Closed-loop tracking simulation
-* Cartesian tracking validation
+- Direct URDF import into the physics engine.
+- Rigid-body dynamics simulation.
+- Gravity validation.
+- Torque estimation.
+- Collision detection.
+- Contact force analysis.
+- Continuous closed-loop validation against analytical control algorithms.
 
 ---
 
-## Technologies
+## ROS 2 Architecture
 
-* Python
-* NumPy
-* Matplotlib
-* Pillow (GIF generation)
-* Git & GitHub
+- Distributed ROS 2 nodes communicating through DDS.
+- Ubuntu 22.04 LTS (WSL2) development environment.
+- Launch files for one-command startup.
+- Automatic TF broadcasting.
+- RViz visualization.
+- Software rendering compatibility using:
 
----
-
-## Future Work
-
-* Build the physical 3-DOF robotic arm
-* Integrate embedded motor control
-* Add a URDF robot model
-* Simulate the robot in PyBullet or MuJoCo
-* Implement dynamics-based control
-* Add vision-guided manipulation
-* Explore imitation learning and reinforcement learning for autonomous manipulation
+```bash
+LIBGL_ALWAYS_SOFTWARE=1
+```
 
 ---
 
-## Author
+## Motion Planning & Control
+
+- Static point-to-point targeting.
+- Continuous Cartesian trajectory generation.
+- Vertical circular path planning.
+- Real-time 30 Hz execution.
+- Joint-space interpolation.
+
+---
+
+# Technologies & Hardware
+
+## Software
+
+| Category | Technology |
+|-----------|------------|
+| Operating System | Linux Mint / Ubuntu 22.04 LTS (WSL2) |
+| Middleware | ROS 2 Humble |
+| Physics Engine | PyBullet |
+| Visualization | RViz2 |
+| Languages | Python, C++ |
+| Libraries | NumPy, Matplotlib, Pillow |
+
+---
+
+## Hardware (Active Prototyping)
+
+| Component | Hardware |
+|-----------|----------|
+| Microcontroller | Arduino UNO R4 WiFi |
+| CPU | 32-bit ARM Cortex-M4 |
+| Servos | 4× MG996R Metal Gear Servos |
+| Power Supply | Arkare 5V 4A External DC Supply |
+| Prototyping | Barrel jack adapters, solderless breadboards, jumper wires |
+
+---
+
+# Future Work
+
+## Physical Assembly
+
+- Complete CAD model development in Onshape.
+- Servo mounting design.
+- Structural arm component fabrication.
+- 3D printing and assembly.
+
+## Firmware
+
+- Arduino firmware implementation.
+- Serial or micro-ROS communication.
+- Joint command parsing.
+- PWM servo control.
+
+## Autonomous Robotics
+
+- Reinforcement learning integration.
+- Vision-guided manipulation.
+- Autonomous reaching.
+- Sim-to-real transfer using PyBullet.
+
+---
+
+# Author
 
 **Adam Sabet**
+
+The simulator successfully generates smooth Cartesian trajectories, converts them to joint commands using inverse kinematics, and tracks the desired end-effector motion through closed-loop control.
+
