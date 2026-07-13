@@ -9,12 +9,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from control.inverse_kinematics import inverse_kinematics
 
 class RobotHardwareInterface:
-    def __init__(self, port='/dev/ttyACM0', baudrate=115200):
-        """
-        Initializes serial connection to the Arduino Uno R4.
-        NOTE: On Linux Mint, your Arduino port will likely be '/dev/ttyACM0' or '/dev/ttyUSB0'.
-        On Windows, it will look like 'COM3'.
-        """
+    def __init__(self, port='COM3', baudrate=115200):
         try:
             self.ser = serial.Serial(port, baudrate, timeout=1)
             time.sleep(2) # Vital: Allow Arduino time to reset after opening serial port
